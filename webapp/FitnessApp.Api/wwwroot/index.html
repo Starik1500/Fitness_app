@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitnessApp — Кабінет користувача</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark px-4">
+  <span class="navbar-brand fw-bold">🏋️ FitnessTracker</span>
+  <div class="d-flex align-items-center gap-3">
+    <span id="navUserEmail" class="text-light small"></span>
+    <a href="/admin.html" class="btn btn-outline-warning btn-sm">Адмін-панель</a>
+    <a href="/swagger" target="_blank" class="btn btn-outline-info btn-sm">Swagger API</a>
+    <button id="btnLogout" class="btn btn-outline-light btn-sm d-none" onclick="logout()">Вийти</button>
+  </div>
+</nav>
+
+<div class="container py-4">
+  <div id="authSection" class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Вхід у систему</h5>
+          <input id="loginEmail" class="form-control mb-2" placeholder="Email" value="user@fitness.local" />
+          <input id="loginPass" type="password" class="form-control mb-3" placeholder="Пароль" value="123456" />
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" onclick="login()">Увійти</button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="quickDemo()">Швидкий вхід (Demo User)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-3">Реєстрація нового профілю</h5>
+          <input id="regEmail" class="form-control mb-2" placeholder="Email" />
+          <input id="regPass" type="password" class="form-control mb-2" placeholder="Пароль" />
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <select id="regGender" class="form-select">
+                <option value="0">Чоловіча</option>
+                <option value="1">Жіноча</option>
+                <option value="2">Інша</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <input id="regBirth" type="date" class="form-control" value="2002-05-15" />
+            </div>
+          </div>
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <input id="regHeight" type="number" class="form-control" placeholder="Зріст (см)" value="178" />
+            </div>
+            <div class="col-6">
+              <input id="regWeight" type="number" class="form-control" placeholder="Вага (кг)" value="75" />
+            </div>
+          </div>
+          <button class="btn btn-success w-100" onclick="register()">Створити акаунт</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboardSection" class="d-none">
+    <div id="toastAlert" class="alert alert-success d-none" role="alert"></div>
+
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-bold">👤 Профіль та антропометрія</div>
+          <div class="card-body">
+            <p class="mb-1">Зріст: <strong id="profHeight">-</strong> см</p>
+            <p class="mb-1">Поточна вага: <strong id="profWeight">-</strong> кг</p>
+            <p class="mb-3">Індекс маси тіла (ІМТ): <span id="profBmi" class="badge bg-primary fs-6">-</span></p>
+            <div class="input-group">
+              <input id="newWeightInput" type="number" step="0.1" class="form-control" placeholder="Нова вага (кг)" />
+              <button class="btn btn-outline-primary" onclick="logWeight()">Записати вагу</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-bold">⏰ Нагадування про тренування</div>
+          <div class="card-body">
+            <input id="remCron" class="form-control mb-2" value="Пн, Ср, Пт о 18:00" placeholder="Розклад" />
+            <select id="remChannel" class="form-select mb-2">
+              <option value="1">WebPush сповіщення</option>
+              <option value="0">Email розсилка</option>
+            </select>
+            <button class="btn btn-secondary btn-sm w-100 mb-2" onclick="addReminder()">Зберегти нагадування</button>
+            <ul id="remindersList" class="list-group list-group-flush small"></ul>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-header fw-bold">🏆 Досягнення та Рейтинг</div>
+          <div class="card-body">
+            <h6>Мої досягнення:</h6>
+            <div id="achievementsBox" class="mb-3"></div>
+            <h6>Топ користувачів (калорії):</h6>
+            <ol id="leaderboardList" class="list-group list-group-numbered small"></ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+          <div class="card-header fw-bold d-flex justify-content-between align-items-center">
+            <span>🔥 Бібліотека тренувань та трекінг</span>
+            <div class="d-flex gap-2">
+              <select id="goalSelect" class="form-select form-select-sm">
+                <option value="0">Ціль: Схуднення</option>
+                <option value="1">Ціль: Набір маси</option>
+                <option value="2">Ціль: Витривалість</option>
+              </select>
+              <button class="btn btn-success btn-sm text-nowrap" onclick="generateProgram()">+ Згенерувати програму</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="row g-2 align-items-end mb-3">
+              <div class="col-md-6">
+                <label class="form-label small">Оберіть тренування:</label>
+                <select id="workoutSelect" class="form-select"></select>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label small">Тривалість (хв):</label>
+                <input id="durationInput" type="number" class="form-control" value="45" />
+              </div>
+              <div class="col-md-3">
+                <button class="btn btn-primary w-100" onclick="completeWorkout()">Завершити ✓</button>
+              </div>
+            </div>
+
+            <div id="programsBox" class="mt-3"></div>
+          </div>
+        </div>
+
+        <!-- Графіки -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-7">
+            <div class="card shadow-sm h-100">
+              <div class="card-header fw-bold">📈 Мій прогрес (вага та калорії)</div>
+              <div class="card-body"><canvas id="progressChart"></canvas></div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="card shadow-sm h-100">
+              <div class="card-header fw-bold">📊 Популярні тренування</div>
+              <div class="card-body"><canvas id="popularChart"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm">
+          <div class="card-header fw-bold">🎯 Активні челенджі</div>
+          <div class="card-body" id="challengesBox"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentUser = null;
+  let progressChartInstance = null;
+  let popularChartInstance = null;
+  const workoutTypes = ['Cardio', 'Strength', 'Yoga'];
+
+  function showToast(msg) {
+    const el = document.getElementById('toastAlert');
+    el.textContent = msg;
+    el.classList.remove('d-none');
+    setTimeout(() => el.classList.add('d-none'), 4000);
+  }
+
+  async function quickDemo() {
+    document.getElementById('loginEmail').value = 'user@fitness.local';
+    document.getElementById('loginPass').value = '123456';
+    await login();
+  }
+
+  async function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPass').value;
+    const res = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    if (!res.ok) return alert(await res.text());
+    currentUser = await res.json();
+    localStorage.setItem('fitnessUserId', currentUser.id);
+    initDashboard();
+  }
+
+  async function register() {
+    const body = {
+      email: document.getElementById('regEmail').value,
+      password: document.getElementById('regPass').value,
+      gender: parseInt(document.getElementById('regGender').value),
+      birthDate: document.getElementById('regBirth').value,
+      heightCm: parseFloat(document.getElementById('regHeight').value),
+      weightKg: parseFloat(document.getElementById('regWeight').value)
+    };
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if (!res.ok) return alert(await res.text());
+    currentUser = await res.json();
+    localStorage.setItem('fitnessUserId', currentUser.id);
+    initDashboard();
+  }
+
+  function logout() {
+    localStorage.removeItem('fitnessUserId');
+    location.reload();
+  }
+
+  async function initDashboard() {
+    document.getElementById('authSection').classList.add('d-none');
+    document.getElementById('dashboardSection').classList.remove('d-none');
+    document.getElementById('btnLogout').classList.remove('d-none');
+    document.getElementById('navUserEmail').textContent = currentUser.email;
+
+    await refreshAll();
+  }
+
+  async function refreshAll() {
+    const uid = currentUser.id;
+    // Профіль
+    const profRes = await fetch(`/api/profile/${uid}`);
+    const profData = await profRes.json();
+    document.getElementById('profHeight').textContent = profData.profile.heightCm;
+    document.getElementById('profWeight').textContent = profData.profile.currentWeightKg;
+    document.getElementById('profBmi').textContent = profData.bmi;
+
+    // Бібліотека тренувань
+    const wRes = await fetch('/api/workouts');
+    const workouts = await wRes.json();
+    document.getElementById('workoutSelect').innerHTML = workouts
+      .map(w => `<option value="${w.id}">${w.title} (${workoutTypes[w.type]})</option>`).join('');
+
+    // Програми користувача
+    const pRes = await fetch(`/api/programs/${uid}`);
+    const programs = await pRes.json();
+    document.getElementById('programsBox').innerHTML = programs.length
+      ? `<h6>Мої згенеровані програми:</h6>` + programs.map(p =>
+          `<div class="border rounded p-2 mb-2 bg-light"><strong>${p.title}</strong> (${p.startDate} — ${p.endDate})<br><small>Тренувань у плані: ${p.workouts.length}</small></div>`
+        ).join('')
+      : '<small class="text-muted">Ще немає програм. Натисніть «Згенерувати програму».</small>';
+
+    // Нагадування
+    const rRes = await fetch(`/api/reminders/${uid}`);
+    const rems = await rRes.json();
+    document.getElementById('remindersList').innerHTML = rems
+      .map(r => `<li class="list-group-item px-0">${r.cronExpression} <span class="badge bg-secondary">${r.channel === 0 ? 'Email' : 'WebPush'}</span></li>`).join('');
+
+    // Досягнення
+    const aRes = await fetch(`/api/social/achievements/${uid}`);
+    const achs = await aRes.json();
+    document.getElementById('achievementsBox').innerHTML = achs.length
+      ? achs.map(a => `<span class="badge bg-warning text-dark me-1 mb-1">🏅 ${a.title}</span>`).join('')
+      : '<small class="text-muted">Виконайте перше тренування, щоб відкрити нагороду!</small>';
+
+    // Рейтинг
+    const lRes = await fetch('/api/social/leaderboard');
+    const board = await lRes.json();
+    document.getElementById('leaderboardList').innerHTML = board
+      .map(u => `<li class="list-group-item d-flex justify-content-between"><span>${u.name}</span><strong>${u.totalCalories} ккал</strong></li>`).join('');
+
+    // Челенджі
+    const cRes = await fetch(`/api/social/challenges/${uid}`);
+    const challenges = await cRes.json();
+    document.getElementById('challengesBox').innerHTML = challenges.map(c => {
+      const pct = Math.min(100, Math.round((c.currentCalories / c.targetCalories) * 100));
+      return `
+        <div class="border rounded p-3 mb-2">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <strong>${c.title}</strong>
+            ${c.isJoined
+              ? `<span class="badge bg-success">Ви берете участь (${c.currentCalories} / ${c.targetCalories} ккал)</span>`
+              : `<button class="btn btn-sm btn-outline-primary" onclick="joinChallenge('${c.id}')">Приєднатися</button>`}
+          </div>
+          <div class="progress" style="height: 10px;">
+            <div class="progress-bar bg-success" style="width: ${pct}%"></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const sRes = await fetch(`/api/sessions/${uid}`);
+    const sessions = await sRes.json();
+    document.getElementById('programsBox').innerHTML += sessions.length
+      ? `<h6 class="mt-3">Історія виконаних тренувань:</h6><ul class="list-group list-group-flush small">` +
+        sessions.slice(0, 5).map(s =>
+          `<li class="list-group-item px-0 d-flex justify-content-between">
+            <span>✅ ${s.workoutTemplate?.title || 'Тренування'} (${s.durationMinutes} хв)</span>
+            <strong>${s.caloriesBurned} ккал</strong>
+          </li>`).join('') + `</ul>`
+      : '';
+
+    await drawCharts(uid);
+  }
+
+  async function logWeight() {
+    const w = parseFloat(document.getElementById('newWeightInput').value);
+    if (!w) return;
+    await fetch(`/api/profile/${currentUser.id}/weight?weightKg=${w}`, { method: 'POST' });
+    document.getElementById('newWeightInput').value = '';
+    showToast('Вагу оновлено!');
+    await refreshAll();
+  }
+
+  async function generateProgram() {
+    const goal = document.getElementById('goalSelect').value;
+    await fetch(`/api/programs/generate?userId=${currentUser.id}&goal=${goal}`, { method: 'POST' });
+    showToast('Індивідуальну програму сформовано (Builder)!');
+    await refreshAll();
+  }
+
+  async function completeWorkout() {
+    const templateId = document.getElementById('workoutSelect').value;
+    const durationMinutes = document.getElementById('durationInput').value;
+    const res = await fetch(`/api/sessions?userId=${currentUser.id}&templateId=${templateId}&durationMinutes=${durationMinutes}`, { method: 'POST' });
+    const session = await res.json();
+    showToast(`Тренування зараховано! Спалено ${session.caloriesBurned} ккал (Strategy + Observer)`);
+    await refreshAll();
+  }
+
+  async function addReminder() {
+    const body = {
+      userId: currentUser.id,
+      cronExpression: document.getElementById('remCron').value,
+      channel: parseInt(document.getElementById('remChannel').value)
+    };
+    const res = await fetch('/api/reminders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    showToast(data.deliveryPreview);
+    await refreshAll();
+  }
+
+  async function joinChallenge(id) {
+    await fetch(`/api/social/challenges/${id}/join?userId=${currentUser.id}`, { method: 'POST' });
+    showToast('Ви приєдналися до челенджу!');
+    await refreshAll();
+  }
+
+  async function drawCharts(uid) {
+    const progRes = await fetch(`/api/reports/progress/${uid}`);
+    const prog = await progRes.json();
+
+    if (progressChartInstance) progressChartInstance.destroy();
+    progressChartInstance = new Chart(document.getElementById('progressChart'), {
+      type: 'line',
+      data: {
+        labels: [...new Set([
+          ...prog.weightHistory.map(x => x.date),
+          ...prog.calorieHistory.map(x => x.date)
+        ])].sort(),
+        datasets: [
+          {
+            label: 'Вага (кг)',
+            data: prog.weightHistory.map(x => ({ x: x.date, y: x.weightKg })),
+            borderColor: '#0d6efd',
+            yAxisID: 'y',
+            tension: 0.2
+          },
+          {
+            label: 'Спалені калорії (ккал)',
+            data: prog.calorieHistory.map(x => ({ x: x.date, y: x.caloriesBurned })),
+            borderColor: '#198754',
+            yAxisID: 'y1',
+            tension: 0.2
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: { type: 'linear', position: 'left', title: { display: true, text: 'Кг' } },
+          y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Ккал' } }
+        }
+      }
+    });
+
+    const popRes = await fetch('/api/reports/popular-workouts');
+    const pop = await popRes.json();
+
+    if (popularChartInstance) popularChartInstance.destroy();
+    popularChartInstance = new Chart(document.getElementById('popularChart'), {
+      type: 'doughnut',
+      data: {
+        labels: pop.map(x => x.title),
+        datasets: [{
+          data: pop.map(x => x.sessionsCount),
+          backgroundColor: ['#198754', '#0d6efd', '#ffc107', '#dc3545']
+        }]
+      }
+    });
+  }
+
+  window.onload = async () => {
+    const savedId = localStorage.getItem('fitnessUserId');
+    if (savedId) {
+      const res = await fetch(`/api/profile/${savedId}`);
+      if (res.ok) {
+        currentUser = await res.json();
+        initDashboard();
+      }
+    }
+  };
+</script>
+</body>
+</html>

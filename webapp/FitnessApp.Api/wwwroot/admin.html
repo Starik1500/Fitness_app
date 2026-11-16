@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitnessApp — Адмін-панель</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-dark px-4">
+  <span class="navbar-brand fw-bold text-warning">⚙️ FitnessTracker — Адмін-панель</span>
+  <a href="/index.html" class="btn btn-outline-light btn-sm">← До кабінету користувача</a>
+</nav>
+
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-bold">1. Додати вправу в довідник</div>
+        <div class="card-body">
+          <input id="exName" class="form-control mb-2" placeholder="Назва (напр. Планка)" />
+          <select id="exCat" class="form-select mb-2">
+            <option value="0">Cardio</option>
+            <option value="1">Strength</option>
+            <option value="2">Yoga</option>
+          </select>
+          <input id="exMet" type="number" step="0.5" class="form-control mb-2" placeholder="MET коефіцієнт (напр. 5.0)" value="5.0" />
+          <input id="exDesc" class="form-control mb-3" placeholder="Короткий опис" />
+          <button class="btn btn-primary w-100 mb-3" onclick="addExercise()">Додати вправу</button>
+          <ul id="exList" class="list-group list-group-flush small"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-bold">2. Додати шаблон тренування</div>
+        <div class="card-body">
+          <input id="wtTitle" class="form-control mb-2" placeholder="Назва тренування" />
+          <select id="wtType" class="form-select mb-2">
+            <option value="0">Cardio</option>
+            <option value="1">Strength</option>
+            <option value="2">Yoga</option>
+          </select>
+          <select id="wtDiff" class="form-select mb-3">
+            <option value="0">Beginner</option>
+            <option value="1">Intermediate</option>
+            <option value="2">Pro</option>
+          </select>
+          <button class="btn btn-success w-100 mb-3" onclick="addWorkout()">Створити тренування</button>
+          <ul id="wtList" class="list-group list-group-flush small"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-header fw-bold">3. Створити челендж</div>
+        <div class="card-body">
+          <input id="chTitle" class="form-control mb-2" placeholder="Назва челенджу" />
+          <input id="chCal" type="number" class="form-control mb-2" placeholder="Цільові калорії (напр. 3000)" value="3000" />
+          <input id="chDays" type="number" class="form-control mb-3" placeholder="Тривалість (днів)" value="14" />
+          <button class="btn btn-warning w-100" onclick="addChallenge()">Запустити челендж</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold">📊 Звіт: Середня активність користувачів за період</div>
+        <div class="card-body">
+          <div class="row g-2 mb-3">
+            <div class="col-5"><input id="repFrom" type="date" class="form-control" value="2026-01-01" /></div>
+            <div class="col-5"><input id="repTo" type="date" class="form-control" value="2026-12-31" /></div>
+            <div class="col-2"><button class="btn btn-dark w-100" onclick="loadAvgReport()">Ок</button></div>
+          </div>
+          <div id="avgResult" class="alert alert-info mb-0">Натисніть «Ок» для розрахунку статистики</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header fw-bold">👥 Зареєстровані користувачі в БД</div>
+        <div class="card-body">
+          <table class="table table-sm mb-0">
+            <thead><tr><th>Email</th><th>Роль</th><th>Вага</th></tr></thead>
+            <tbody id="usersTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const types = ['Cardio', 'Strength', 'Yoga'];
+
+  async function loadAdminData() {
+    const exRes = await fetch('/api/exercises');
+    const exercises = await exRes.json();
+    document.getElementById('exList').innerHTML = exercises.map(e =>
+      `<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+        <span>${e.name} (${types[e.category]}, MET ${e.baseMetValue})</span>
+        <button class="btn btn-sm btn-outline-danger py-0" onclick="delEx('${e.id}')">×</button>
+      </li>`).join('');
+
+    const wtRes = await fetch('/api/workouts');
+    const workouts = await wtRes.json();
+    document.getElementById('wtList').innerHTML = workouts.map(w =>
+      `<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+        <span>${w.title} (${types[w.type]})</span>
+        <button class="btn btn-sm btn-outline-danger py-0" onclick="delWt('${w.id}')">×</button>
+      </li>`).join('');
+
+    const uRes = await fetch('/api/admin/users');
+    const users = await uRes.json();
+    document.getElementById('usersTable').innerHTML = users.map(u =>
+      `<tr><td>${u.email}</td><td><span class="badge bg-secondary">${u.role}</span></td><td>${u.weight} кг</td></tr>`).join('');
+  }
+
+  async function addExercise() {
+    await fetch('/api/admin/exercises', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('exName').value,
+        category: parseInt(document.getElementById('exCat').value),
+        baseMetValue: parseFloat(document.getElementById('exMet').value),
+        description: document.getElementById('exDesc').value
+      })
+    });
+    document.getElementById('exName').value = '';
+    loadAdminData();
+  }
+
+  async function delEx(id) {
+    await fetch(`/api/admin/exercises/${id}`, { method: 'DELETE' });
+    loadAdminData();
+  }
+
+  async function addWorkout() {
+    await fetch('/api/admin/workouts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: document.getElementById('wtTitle').value,
+        type: parseInt(document.getElementById('wtType').value),
+        difficulty: parseInt(document.getElementById('wtDiff').value)
+      })
+    });
+    document.getElementById('wtTitle').value = '';
+    loadAdminData();
+  }
+
+  async function delWt(id) {
+    await fetch(`/api/admin/workouts/${id}`, { method: 'DELETE' });
+    loadAdminData();
+  }
+
+  async function addChallenge() {
+    await fetch('/api/admin/challenges', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: document.getElementById('chTitle').value,
+        targetCalories: parseFloat(document.getElementById('chCal').value),
+        durationDays: parseInt(document.getElementById('chDays').value)
+      })
+    });
+    alert('Челендж створено!');
+    document.getElementById('chTitle').value = '';
+  }
+
+  async function loadAvgReport() {
+    const from = document.getElementById('repFrom').value;
+    const to = document.getElementById('repTo').value;
+    const res = await fetch(`/api/reports/average-activity?from=${from}&to=${to}`);
+    const data = await res.json();
+    document.getElementById('avgResult').innerHTML =
+      `Середній час на користувача: <strong>${data.avgMinutesPerUser} хв</strong> | Середні витрати: <strong>${data.avgCaloriesPerUser} ккал</strong>`;
+  }
+
+  window.onload = loadAdminData;
+</script>
+</body>
+</html>
