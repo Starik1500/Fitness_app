@@ -1,0 +1,139 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Fitness App Use Case" id="wqkmFFpBvUafrOo-UfXa">
+    <mxGraphModel dx="2350" dy="1114" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="1150" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sys-boundary" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;width=180;height=30;fillColor=none;strokeColor=#333333;strokeWidth=2;fontStyle=1;fontSize=14;" value="Fitness App System" vertex="1">
+          <mxGeometry height="1060" width="800" x="230" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-guest" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=1;" value="Guest" vertex="1">
+          <mxGeometry height="70" width="35" x="80" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-user" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=1;" value="User" vertex="1">
+          <mxGeometry height="70" width="35" x="80" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-admin" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=1;" value="Admin" vertex="1">
+          <mxGeometry height="70" width="35" x="80" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="actor-scheduler" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=1;" value="Notification&#xa;Scheduler" vertex="1">
+          <mxGeometry height="70" width="35" x="1120" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="gen-user-guest" edge="1" parent="1" source="actor-user" style="endArrow=block;endFill=0;endSize=14;html=1;rounded=0;" target="actor-guest">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-signup" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Sign Up &amp; Create Account" vertex="1">
+          <mxGeometry height="50" width="230" x="300" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-profile-init" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Enter Anthropometric Data&#xa;(Gender, Age, Weight, Height)" vertex="1">
+          <mxGeometry height="55" width="260" x="710" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-login" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Log In" vertex="1">
+          <mxGeometry height="45" width="230" x="300" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-browse" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" value="Browse Workout Library&#xa;(Cardio, Strength, Yoga)" vertex="1">
+          <mxGeometry height="55" width="230" x="300" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-weight" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Update Profile &amp; Log Weight Changes" vertex="1">
+          <mxGeometry height="50" width="240" x="300" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-program" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Create Custom Workout Program" vertex="1">
+          <mxGeometry height="50" width="240" x="300" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-auto-program" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Auto-Generate Program by Goal&#xa;(Builder)" vertex="1">
+          <mxGeometry height="55" width="260" x="710" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-track" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Track Completed Workout Session" vertex="1">
+          <mxGeometry height="50" width="240" x="300" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-calories" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Calculate Burned Calories&#xa;(Strategy)" vertex="1">
+          <mxGeometry height="50" width="260" x="710" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-progress" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="View Personal Progress Charts&#xa;(Weight &amp; Calories)" vertex="1">
+          <mxGeometry height="55" width="240" x="300" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-reminders" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Configure Workout Reminders" vertex="1">
+          <mxGeometry height="50" width="240" x="300" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-send-notif" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Send Workout Reminder Notification" vertex="1">
+          <mxGeometry height="50" width="260" x="710" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-social" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Join Challenges &amp; View Leaderboards" vertex="1">
+          <mxGeometry height="50" width="240" x="300" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-achievements" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" value="Unlock Achievements&#xa;(Observer)" vertex="1">
+          <mxGeometry height="50" width="260" x="710" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-admin-workouts" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Manage Exercises &amp; Workouts (CRUD)" vertex="1">
+          <mxGeometry height="50" width="250" x="300" y="810" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-admin-challenges" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="Manage Challenges &amp; Achievements" vertex="1">
+          <mxGeometry height="50" width="250" x="300" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-report-popular" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="View Most Popular Workouts Report" vertex="1">
+          <mxGeometry height="50" width="250" x="300" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="uc-report-avg" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" value="View Average User Activity Report" vertex="1">
+          <mxGeometry height="50" width="260" x="710" y="960" as="geometry" />
+        </mxCell>
+        <mxCell id="link-g1" edge="1" parent="1" source="actor-guest" style="endArrow=none;html=1;rounded=0;" target="uc-signup">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-g2" edge="1" parent="1" source="actor-guest" style="endArrow=none;html=1;rounded=0;" target="uc-login">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-g3" edge="1" parent="1" source="actor-guest" style="endArrow=none;html=1;rounded=0;" target="uc-browse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-u1" edge="1" parent="1" source="actor-user" style="endArrow=none;html=1;rounded=0;" target="uc-weight">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-u2" edge="1" parent="1" source="actor-user" style="endArrow=none;html=1;rounded=0;" target="uc-program">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-u3" edge="1" parent="1" source="actor-user" style="endArrow=none;html=1;rounded=0;" target="uc-track">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-u4" edge="1" parent="1" source="actor-user" style="endArrow=none;html=1;rounded=0;" target="uc-progress">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-u5" edge="1" parent="1" source="actor-user" style="endArrow=none;html=1;rounded=0;" target="uc-reminders">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-u6" edge="1" parent="1" source="actor-user" style="endArrow=none;html=1;rounded=0;" target="uc-social">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-s1" edge="1" parent="1" source="actor-scheduler" style="endArrow=none;html=1;rounded=0;" target="uc-send-notif">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-a1" edge="1" parent="1" source="actor-admin" style="endArrow=none;html=1;rounded=0;" target="uc-admin-workouts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-a2" edge="1" parent="1" source="actor-admin" style="endArrow=none;html=1;rounded=0;" target="uc-admin-challenges">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-a3" edge="1" parent="1" source="actor-admin" style="endArrow=none;html=1;rounded=0;" target="uc-report-popular">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="link-a4" edge="1" parent="1" source="actor-admin" style="endArrow=none;html=1;rounded=0;" target="uc-report-avg">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc-signup" edge="1" parent="1" source="uc-signup" style="dashed=1;endArrow=open;endSize=12;html=1;rounded=0;" target="uc-profile-init" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-program" edge="1" parent="1" source="uc-auto-program" style="dashed=1;endArrow=open;endSize=12;html=1;rounded=0;" target="uc-program" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc-calories" edge="1" parent="1" source="uc-track" style="dashed=1;endArrow=open;endSize=12;html=1;rounded=0;" target="uc-calories" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ext-achieve" edge="1" parent="1" source="uc-achievements" style="dashed=1;endArrow=open;endSize=12;html=1;rounded=0;" target="uc-track" value="&amp;lt;&amp;lt;extend&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="inc-notif" edge="1" parent="1" source="uc-reminders" style="dashed=1;endArrow=open;endSize=12;html=1;rounded=0;" target="uc-send-notif" value="&amp;lt;&amp;lt;include&amp;gt;&amp;gt;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
