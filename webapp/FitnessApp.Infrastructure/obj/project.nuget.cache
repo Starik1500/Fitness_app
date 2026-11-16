@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "Oy/K4Rtha0M=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Vitaliy\\Documents\\GitHub\\Fitness_app\\webapp\\FitnessApp.Infrastructure\\FitnessApp.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.data.sqlite.core\\11.0.0\\microsoft.data.sqlite.core.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.entityframeworkcore\\11.0.0\\microsoft.entityframeworkcore.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\11.0.0\\microsoft.entityframeworkcore.abstractions.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\11.0.0\\microsoft.entityframeworkcore.analyzers.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\11.0.0\\microsoft.entityframeworkcore.relational.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite\\11.0.0\\microsoft.entityframeworkcore.sqlite.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.entityframeworkcore.sqlite.core\\11.0.0\\microsoft.entityframeworkcore.sqlite.core.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.extensions.caching.memory\\11.0.0\\microsoft.extensions.caching.memory.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\11.0.0\\microsoft.extensions.dependencyinjection.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.extensions.dependencymodel\\11.0.0\\microsoft.extensions.dependencymodel.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\microsoft.extensions.logging\\11.0.0\\microsoft.extensions.logging.11.0.0.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\sqlite\\3.53.4\\sqlite.3.53.4.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\sqlitepclraw.bundle_e_sqlite3\\3.0.5\\sqlitepclraw.bundle_e_sqlite3.3.0.5.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\sqlitepclraw.config.e_sqlite3\\3.0.5\\sqlitepclraw.config.e_sqlite3.3.0.5.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\sqlitepclraw.core\\3.0.5\\sqlitepclraw.core.3.0.5.nupkg.sha512",
+    "C:\\Users\\Vitaliy\\.nuget\\packages\\sqlitepclraw.provider.e_sqlite3\\3.0.5\\sqlitepclraw.provider.e_sqlite3.3.0.5.nupkg.sha512"
+  ],
+  "logs": []
+}

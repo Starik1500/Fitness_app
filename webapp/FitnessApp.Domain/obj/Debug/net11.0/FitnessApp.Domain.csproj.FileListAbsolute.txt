@@ -1,0 +1,13 @@
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\bin\Debug\net11.0\FitnessApp.Domain.deps.json
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\bin\Debug\net11.0\FitnessApp.Domain.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\bin\Debug\net11.0\FitnessApp.Domain.pdb
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessApp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessApp.Domain.AssemblyInfoInputs.cache
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessApp.Domain.AssemblyInfo.cs
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessApp.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessApp.Domain.sourcelink.json
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessApp.Domain.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\refint\FitnessApp.Domain.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessApp.Domain.pdb
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\ref\FitnessApp.Domain.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Domain\obj\Debug\net11.0\FitnessA.B8CA9EA3.Up2Date

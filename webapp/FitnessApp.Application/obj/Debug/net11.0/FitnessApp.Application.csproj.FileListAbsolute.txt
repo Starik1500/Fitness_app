@@ -1,0 +1,16 @@
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.csproj.AssemblyReference.cache
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.AssemblyInfoInputs.cache
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.AssemblyInfo.cs
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.csproj.CoreCompileInputs.cache
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.sourcelink.json
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\bin\Debug\net11.0\FitnessApp.Application.deps.json
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\bin\Debug\net11.0\FitnessApp.Application.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\bin\Debug\net11.0\FitnessApp.Application.pdb
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\bin\Debug\net11.0\FitnessApp.Domain.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\bin\Debug\net11.0\FitnessApp.Domain.pdb
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessA.803399F6.Up2Date
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\refint\FitnessApp.Application.dll
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\FitnessApp.Application.pdb
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Application\obj\Debug\net11.0\ref\FitnessApp.Application.dll

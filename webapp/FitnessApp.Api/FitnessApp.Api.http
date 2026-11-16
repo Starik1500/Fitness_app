@@ -1,0 +1,11 @@
+@FitnessApp.Api_HostAddress = http://localhost:5140
+
+GET {{FitnessApp.Api_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+
+GET {{FitnessApp.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
