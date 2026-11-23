@@ -95,7 +95,34 @@
 </div>
 
 <script>
-  const types = ['Cardio', 'Strength', 'Yoga'];
+const types = ['Cardio', 'Strength', 'Yoga'];
+  const userId = localStorage.getItem('fitnessUserId');
+
+  const adminHeaders = {
+    'Content-Type': 'application/json',
+    'X-User-Id': userId || ''
+  };
+
+  async function verifyAdminAndLoad() {
+    if (!userId) {
+      window.location.replace('/index.html');
+      return;
+    }
+
+    // Перевіряємо роль через сервер, щоб не можна було підробити localStorage
+    const profRes = await fetch(`/api/profile/${userId}`);
+    if (!profRes.ok) {
+      window.location.replace('/index.html');
+      return;
+    }
+    const user = await profRes.json();
+    if (user.role !== 'Admin') {
+      window.location.replace('/index.html');
+      return;
+    }
+
+    await loadAdminData();
+  }
 
   async function loadAdminData() {
     const exRes = await fetch('/api/exercises');
@@ -114,16 +141,18 @@
         <button class="btn btn-sm btn-outline-danger py-0" onclick="delWt('${w.id}')">×</button>
       </li>`).join('');
 
-    const uRes = await fetch('/api/admin/users');
-    const users = await uRes.json();
-    document.getElementById('usersTable').innerHTML = users.map(u =>
-      `<tr><td>${u.email}</td><td><span class="badge bg-secondary">${u.role}</span></td><td>${u.weight} кг</td></tr>`).join('');
+    const uRes = await fetch('/api/admin/users', { headers: adminHeaders });
+    if (uRes.ok) {
+      const users = await uRes.json();
+      document.getElementById('usersTable').innerHTML = users.map(u =>
+        `<tr><td>${u.email}</td><td><span class="badge bg-secondary">${u.role}</span></td><td>${u.weight} кг</td></tr>`).join('');
+    }
   }
 
   async function addExercise() {
     await fetch('/api/admin/exercises', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: adminHeaders,
       body: JSON.stringify({
         name: document.getElementById('exName').value,
         category: parseInt(document.getElementById('exCat').value),
@@ -136,14 +165,14 @@
   }
 
   async function delEx(id) {
-    await fetch(`/api/admin/exercises/${id}`, { method: 'DELETE' });
+    await fetch(`/api/admin/exercises/${id}`, { method: 'DELETE', headers: adminHeaders });
     loadAdminData();
   }
 
   async function addWorkout() {
     await fetch('/api/admin/workouts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: adminHeaders,
       body: JSON.stringify({
         title: document.getElementById('wtTitle').value,
         type: parseInt(document.getElementById('wtType').value),
@@ -155,14 +184,14 @@
   }
 
   async function delWt(id) {
-    await fetch(`/api/admin/workouts/${id}`, { method: 'DELETE' });
+    await fetch(`/api/admin/workouts/${id}`, { method: 'DELETE', headers: adminHeaders });
     loadAdminData();
   }
 
   async function addChallenge() {
     await fetch('/api/admin/challenges', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: adminHeaders,
       body: JSON.stringify({
         title: document.getElementById('chTitle').value,
         targetCalories: parseFloat(document.getElementById('chCal').value),
@@ -182,7 +211,7 @@
       `Середній час на користувача: <strong>${data.avgMinutesPerUser} хв</strong> | Середні витрати: <strong>${data.avgCaloriesPerUser} ккал</strong>`;
   }
 
-  window.onload = loadAdminData;
+  window.onload = verifyAdminAndLoad;
 </script>
 </body>
 </html>

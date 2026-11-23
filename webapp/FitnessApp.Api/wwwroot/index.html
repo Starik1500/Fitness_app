@@ -13,7 +13,7 @@
   <span class="navbar-brand fw-bold">🏋️ FitnessTracker</span>
   <div class="d-flex align-items-center gap-3">
     <span id="navUserEmail" class="text-light small"></span>
-    <a href="/admin.html" class="btn btn-outline-warning btn-sm">Адмін-панель</a>
+    <a id="btnAdminPanel" href="/admin.html" class="btn btn-warning btn-sm fw-bold d-none">Керування</a>
     <a href="/swagger" target="_blank" class="btn btn-outline-info btn-sm">Swagger API</a>
     <button id="btnLogout" class="btn btn-outline-light btn-sm d-none" onclick="logout()">Вийти</button>
   </div>
@@ -194,6 +194,7 @@
     if (!res.ok) return alert(await res.text());
     currentUser = await res.json();
     localStorage.setItem('fitnessUserId', currentUser.id);
+    localStorage.setItem('fitnessUserRole', currentUser.role);
     initDashboard();
   }
 
@@ -214,11 +215,13 @@
     if (!res.ok) return alert(await res.text());
     currentUser = await res.json();
     localStorage.setItem('fitnessUserId', currentUser.id);
+    localStorage.setItem('fitnessUserRole', currentUser.role);
     initDashboard();
   }
 
   function logout() {
     localStorage.removeItem('fitnessUserId');
+    localStorage.removeItem('fitnessUserRole');
     location.reload();
   }
 
@@ -228,12 +231,19 @@
     document.getElementById('btnLogout').classList.remove('d-none');
     document.getElementById('navUserEmail').textContent = currentUser.email;
 
+    const adminBtn = document.getElementById('btnAdminPanel');
+    if (currentUser.role === 'Admin') {
+      adminBtn.classList.remove('d-none');
+    } else {
+      adminBtn.classList.add('d-none');
+    }
+
     await refreshAll();
   }
 
   async function refreshAll() {
     const uid = currentUser.id;
-    // Профіль
+
     const profRes = await fetch(`/api/profile/${uid}`);
     const profData = await profRes.json();
     document.getElementById('profHeight').textContent = profData.profile.heightCm;

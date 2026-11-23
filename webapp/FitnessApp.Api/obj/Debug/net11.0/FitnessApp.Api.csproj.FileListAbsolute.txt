@@ -93,5 +93,9 @@ C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\ne
 C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\FitnessApp.Api.pdb
 C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\FitnessApp.Api.genruntimeconfig.cache
 C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\ref\FitnessApp.Api.dll
-C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\andp0vys3s-{0}-bflgo52dtc-bflgo52dtc.gz
-C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\qgl7tkdlw3-{0}-6q54u037op-6q54u037op.gz
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\andp0vys3s-{0}-wcwgg10nvr-wcwgg10nvr.gz
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\qgl7tkdlw3-{0}-i79s8n1y15-i79s8n1y15.gz
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\pxptnp4vwq-{0}-k1ucajs8j4-k1ucajs8j4.gz
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\8mc0m9uzk4-{0}-s4ol8eqi29-s4ol8eqi29.gz
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\nout05xfkd-{0}-ahojqwwc38-ahojqwwc38.gz
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\c9nc0tmkfn-{0}-pi0eocxqxt-pi0eocxqxt.gz
