@@ -42,6 +42,11 @@ public class AuthAndProfileController : ControllerBase
         };
         var initialWeight = new WeightLog { UserId = user.Id, WeightKg = req.WeightKg };
 
+        if (req.HeightCm < 50 || req.HeightCm > 260)
+            return BadRequest("Зріст має бути в межах від 50 до 260 см.");
+        if (req.WeightKg < 20 || req.WeightKg > 400)
+            return BadRequest("Вага має бути в межах від 20 до 400 кг.");
+
         _db.Users.Add(user);
         _db.UserProfiles.Add(profile);
         _db.WeightLogs.Add(initialWeight);
@@ -97,15 +102,22 @@ public class AuthAndProfileController : ControllerBase
     [HttpPost("profile/{userId}/weight")]
     public async Task<IActionResult> LogWeight(Guid userId, [FromQuery] double weightKg)
     {
-        var profile = await _db.UserProfiles.FindAsync(userId);
-        if (profile == null) return NotFound();
+        if (weightKg < 20 || weightKg > 400)
+            return BadRequest("Вага має бути в межах від 20 до 400 кг.");
+
+        var profile = await _db.UserProfiles.FirstOrDefaultAsync(p => p.UserId == userId);
+        if (profile == null) return NotFound("Профіль користувача не знайдено.");
 
         profile.CurrentWeightKg = weightKg;
-        var log = new WeightLog { UserId = userId, WeightKg = weightKg };
-        _db.WeightLogs.Add(log);
-        await _db.SaveChangesAsync();
+        _db.WeightLogs.Add(new WeightLog
+        {
+            UserId = userId,
+            WeightKg = weightKg,
+            RecordedAt = DateTime.UtcNow
+        });
 
-        return Ok(new { Log = log, NewBmi = profile.CalculateBMI() });
+        await _db.SaveChangesAsync();
+        return Ok(new { profile.CurrentWeightKg });
     }
 
     [HttpGet("reminders/{userId}")]

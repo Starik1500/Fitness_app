@@ -15,7 +15,7 @@ const AdminApp = {
   async init() {
     const userId = ApiClient.getUserId();
     if (!userId) {
-      this.showBanner('Сесія не знайдена (порожній X-User-Id). Увійдіть під адміністратором на головній сторінці.');
+      this.showBanner('Сесія не знайдена. Увійдіть під адміністратором на головній сторінці.');
       return;
     }
 
@@ -29,14 +29,65 @@ const AdminApp = {
   },
 
   renderUsers(users) {
+    const currentId = ApiClient.getUserId();
+
     document.getElementById('usersTable').innerHTML = users.map(u => {
       const roleLabel = typeof u.role === 'number' ? this.roles[u.role] : u.role;
+      const isAdmin = roleLabel === 'Admin';
+      const isSelfOrRoot = u.id === currentId || u.email === 'admin@fitness.local';
+
+      const roleBadge = isAdmin
+        ? `<span class="badge bg-warning text-dark">Admin</span>`
+        : `<span class="badge bg-secondary">User</span>`;
+
+      let actionsHtml = '';
+      if (isSelfOrRoot) {
+        actionsHtml = `<span class="text-muted fst-italic">Поточний / Головний</span>`;
+      } else {
+        const roleBtn = !isAdmin
+          ? `<button class="btn btn-outline-warning btn-sm py-0 me-1" title="Надати права адміністратора" onclick="AdminApp.promoteUser('${u.id}', '${u.email}')">⬆️ Адмін</button>`
+          : `<button class="btn btn-outline-secondary btn-sm py-0 me-1" title="Понизити до звичайного користувача" onclick="AdminApp.demoteUser('${u.id}', '${u.email}')">⬇️ Юзер</button>`;
+        const deleteBtn = `<button class="btn btn-outline-danger btn-sm py-0" title="Видалити користувача" onclick="AdminApp.deleteUser('${u.id}', '${u.email}')">🗑️</button>`;
+        actionsHtml = roleBtn + deleteBtn;
+      }
+
       return `<tr>
         <td>${u.email}</td>
-        <td><span class="badge bg-secondary">${roleLabel}</span></td>
+        <td>${roleBadge}</td>
         <td>${u.weight ?? 0} кг</td>
+        <td class="text-end">${actionsHtml}</td>
       </tr>`;
     }).join('');
+  },
+
+  async promoteUser(id, email) {
+    if (!confirm(`Надати права адміністратора користувачу ${email}?`)) return;
+    try {
+      await ApiClient.put(`/api/admin/users/${id}/promote`);
+      await this.reloadAll();
+    } catch (err) {
+      alert(err.message);
+    }
+  },
+
+  async demoteUser(id, email) {
+    if (!confirm(`Понизити ${email} до звичайного користувача (User)?`)) return;
+    try {
+      await ApiClient.put(`/api/admin/users/${id}/demote`);
+      await this.reloadAll();
+    } catch (err) {
+      alert(err.message);
+    }
+  },
+
+  async deleteUser(id, email) {
+    if (!confirm(`Видалити користувача ${email} та всі його тренування?`)) return;
+    try {
+      await ApiClient.delete(`/api/admin/users/${id}`);
+      await this.reloadAll();
+    } catch (err) {
+      alert(err.message);
+    }
   },
 
   async loadCatalogs() {

@@ -1,6 +1,5 @@
 const ApiClient = {
   getUserId() {
-    // Очищуємо старий localStorage, щоб після білду не було автовходу
     localStorage.removeItem('fitnessUserId');
     localStorage.removeItem('fitnessUserRole');
     return sessionStorage.getItem('fitnessUserId') || '';
@@ -39,8 +38,12 @@ const ApiClient = {
     return this.request(url, { method: 'GET' });
   },
 
-  post(url, body) {
+  post(url, body = {}) {
     return this.request(url, { method: 'POST', body: JSON.stringify(body) });
+  },
+
+  put(url, body = {}) {
+    return this.request(url, { method: 'PUT', body: JSON.stringify(body) });
   },
 
   delete(url) {

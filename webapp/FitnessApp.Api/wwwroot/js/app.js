@@ -101,13 +101,23 @@ const App = {
 
   async register() {
     try {
+      const heightCm = parseFloat(document.getElementById('regHeight').value);
+      const weightKg = parseFloat(document.getElementById('regWeight').value);
+
+      if (isNaN(heightCm) || heightCm < 50 || heightCm > 260) {
+        return alert('Зріст має бути в межах від 50 до 260 см');
+      }
+      if (isNaN(weightKg) || weightKg < 20 || weightKg > 400) {
+        return alert('Вага має бути в межах від 20 до 400 кг');
+      }
+
       const payload = {
         email: document.getElementById('regEmail').value.trim(),
         password: document.getElementById('regPass').value,
         gender: parseInt(document.getElementById('regGender').value),
         birthDate: document.getElementById('regBirth').value,
-        heightCm: parseFloat(document.getElementById('regHeight').value),
-        weightKg: parseFloat(document.getElementById('regWeight').value)
+        heightCm,
+        weightKg
       };
       this.currentUser = await ApiClient.post('/api/auth/register', payload);
       this.isDemo = false;
@@ -279,20 +289,26 @@ const App = {
   },
 
   async logWeight() {
-    const weightKg = parseFloat(document.getElementById('newWeightInput').value);
-    if (!weightKg) return;
-    document.getElementById('newWeightInput').value = '';
+    try {
+      const weightKg = parseFloat(document.getElementById('newWeightInput').value);
+      if (isNaN(weightKg) || weightKg < 20 || weightKg > 400) {
+        return alert('Вага має бути в межах від 20 до 400 кг');
+      }
+      document.getElementById('newWeightInput').value = '';
 
-    if (this.isDemo) {
-      this.demoData.weightKg = weightKg;
-      const today = new Date().toISOString().slice(0, 10);
-      this.demoData.weightHistory.push({ date: today, weightKg });
-      this.renderDemoDashboard();
-      return;
+      if (this.isDemo) {
+        this.demoData.weightKg = weightKg;
+        const today = new Date().toISOString().slice(0, 10);
+        this.demoData.weightHistory.push({ date: today, weightKg });
+        this.renderDemoDashboard();
+        return;
+      }
+
+      await ApiClient.post(`/api/profile/${this.currentUser.id}/weight?weightKg=${weightKg}`, {});
+      await this.refreshAll();
+    } catch (err) {
+      alert(err.message);
     }
-
-    await ApiClient.post(`/api/profile/${this.currentUser.id}/weight?weightKg=${weightKg}`, {});
-    this.refreshAll();
   },
 
   async generateProgram() {
