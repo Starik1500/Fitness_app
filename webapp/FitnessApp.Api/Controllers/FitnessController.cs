@@ -79,4 +79,35 @@ public class FitnessController : ControllerBase
     [HttpGet("reports/average-activity")]
     public async Task<IActionResult> GetAverageActivity(DateTime from, DateTime to) =>
         Ok(await _reports.GetAverageActivityAsync(from, to));
+
+    [HttpGet("users")]
+    public async Task<IActionResult> GetUsers()
+    {
+        var users = await _db.Users
+            .Include(u => u.Profile)
+            .Select(u => new
+            {
+                u.Id,
+                u.Email,
+                u.Role,
+                Weight = u.Profile != null ? u.Profile.WeightKg : 0
+            })
+            .ToListAsync();
+
+        return Ok(users);
+    }
+
+    [HttpGet("exercises")]
+    public async Task<IActionResult> GetExercises()
+    {
+        var list = await _db.Exercises.ToListAsync();
+        return Ok(list);
+    }
+
+    [HttpGet("workouts")]
+    public async Task<IActionResult> GetWorkouts()
+    {
+        var list = await _db.WorkoutTemplates.ToListAsync();
+        return Ok(list);
+    }
 }
