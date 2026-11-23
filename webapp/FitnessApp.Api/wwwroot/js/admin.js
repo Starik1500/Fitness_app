@@ -1,95 +1,149 @@
 const AdminApp = {
   types: ['Cardio', 'Strength', 'Yoga'],
+  roles: ['User', 'Admin'],
+
+  showBanner(message, type = 'danger') {
+    const banner = document.getElementById('adminStatusBanner');
+    if (!banner) return;
+    banner.innerHTML = `
+      <div class="alert alert-${type} d-flex justify-content-between align-items-center shadow-sm">
+        <span>${message}</span>
+        <a href="/index.html" class="btn btn-dark btn-sm">На сторінку входу</a>
+      </div>`;
+  },
 
   async init() {
     const userId = ApiClient.getUserId();
     if (!userId) {
-      window.location.replace('/index.html');
+      this.showBanner('Сесія не знайдена (порожній X-User-Id). Увійдіть під адміністратором на головній сторінці.');
       return;
     }
 
     try {
-      const user = await ApiClient.get(`/api/profile/${userId}`);
-      if (user.role !== 'Admin') {
-        window.location.replace('/index.html');
-        return;
-      }
-      await this.loadData();
-    } catch {
-      window.location.replace('/index.html');
+      const users = await ApiClient.get('/api/admin/users');
+      this.renderUsers(users);
+      await this.loadCatalogs();
+    } catch (err) {
+      this.showBanner(`Сервер відхилив доступ: ${err.message}`);
     }
   },
 
-  async loadData() {
-    const [exercises, workouts, users] = await Promise.all([
+  renderUsers(users) {
+    document.getElementById('usersTable').innerHTML = users.map(u => {
+      const roleLabel = typeof u.role === 'number' ? this.roles[u.role] : u.role;
+      return `<tr>
+        <td>${u.email}</td>
+        <td><span class="badge bg-secondary">${roleLabel}</span></td>
+        <td>${u.weight ?? 0} кг</td>
+      </tr>`;
+    }).join('');
+  },
+
+  async loadCatalogs() {
+    const [exercises, workouts] = await Promise.all([
       ApiClient.get('/api/exercises'),
-      ApiClient.get('/api/workouts'),
-      ApiClient.get('/api/admin/users')
+      ApiClient.get('/api/workouts')
     ]);
 
     document.getElementById('exList').innerHTML = exercises.map(e =>
       `<li class="list-group-item d-flex justify-content-between align-items-center px-0">
-        <span>${e.name} (${this.types[e.category]}, MET ${e.baseMetValue})</span>
+        <span>${e.name} (${this.types[e.category] ?? e.category}, MET ${e.baseMetValue})</span>
         <button class="btn btn-sm btn-outline-danger py-0" onclick="AdminApp.delEx('${e.id}')">×</button>
       </li>`).join('');
 
     document.getElementById('wtList').innerHTML = workouts.map(w =>
       `<li class="list-group-item d-flex justify-content-between align-items-center px-0">
-        <span>${w.title} (${this.types[w.type]})</span>
+        <span>${w.title} (${this.types[w.type] ?? w.type})</span>
         <button class="btn btn-sm btn-outline-danger py-0" onclick="AdminApp.delWt('${w.id}')">×</button>
       </li>`).join('');
+  },
 
-    document.getElementById('usersTable').innerHTML = users.map(u =>
-      `<tr><td>${u.email}</td><td><span class="badge bg-secondary">${u.role}</span></td><td>${u.weight} кг</td></tr>`).join('');
+  async reloadAll() {
+    const users = await ApiClient.get('/api/admin/users');
+    this.renderUsers(users);
+    await this.loadCatalogs();
   },
 
   async addExercise() {
-    await ApiClient.post('/api/admin/exercises', {
-      name: document.getElementById('exName').value,
-      category: parseInt(document.getElementById('exCat').value),
-      baseMetValue: parseFloat(document.getElementById('exMet').value),
-      description: document.getElementById('exDesc').value
-    });
-    document.getElementById('exName').value = '';
-    this.loadData();
+    try {
+      const baseMetValue = parseFloat(document.getElementById('exMet').value);
+      if (isNaN(baseMetValue) || baseMetValue <= 0) return alert('MET має бути більшим за 0');
+
+      await ApiClient.post('/api/admin/exercises', {
+        name: document.getElementById('exName').value.trim(),
+        category: parseInt(document.getElementById('exCat').value),
+        baseMetValue,
+        description: document.getElementById('exDesc').value.trim()
+      });
+      document.getElementById('exName').value = '';
+      this.reloadAll();
+    } catch (err) {
+      alert(err.message);
+    }
   },
 
   async delEx(id) {
-    await ApiClient.delete(`/api/admin/exercises/${id}`);
-    this.loadData();
+    try {
+      await ApiClient.delete(`/api/admin/exercises/${id}`);
+      this.reloadAll();
+    } catch (err) {
+      alert(err.message);
+    }
   },
 
   async addWorkout() {
-    await ApiClient.post('/api/admin/workouts', {
-      title: document.getElementById('wtTitle').value,
-      type: parseInt(document.getElementById('wtType').value),
-      difficulty: parseInt(document.getElementById('wtDiff').value)
-    });
-    document.getElementById('wtTitle').value = '';
-    this.loadData();
+    try {
+      await ApiClient.post('/api/admin/workouts', {
+        title: document.getElementById('wtTitle').value.trim(),
+        type: parseInt(document.getElementById('wtType').value),
+        difficulty: parseInt(document.getElementById('wtDiff').value)
+      });
+      document.getElementById('wtTitle').value = '';
+      this.reloadAll();
+    } catch (err) {
+      alert(err.message);
+    }
   },
 
   async delWt(id) {
-    await ApiClient.delete(`/api/admin/workouts/${id}`);
-    this.loadData();
+    try {
+      await ApiClient.delete(`/api/admin/workouts/${id}`);
+      this.reloadAll();
+    } catch (err) {
+      alert(err.message);
+    }
   },
 
   async addChallenge() {
-    await ApiClient.post('/api/admin/challenges', {
-      title: document.getElementById('chTitle').value,
-      targetCalories: parseFloat(document.getElementById('chCal').value),
-      durationDays: parseInt(document.getElementById('chDays').value)
-    });
-    alert('Челендж створено!');
-    document.getElementById('chTitle').value = '';
+    try {
+      const targetCalories = parseFloat(document.getElementById('chCal').value);
+      const durationDays = parseInt(document.getElementById('chDays').value);
+      if (isNaN(targetCalories) || targetCalories <= 0 || isNaN(durationDays) || durationDays <= 0) {
+        return alert('Значення мають бути більшими за 0');
+      }
+
+      await ApiClient.post('/api/admin/challenges', {
+        title: document.getElementById('chTitle').value.trim(),
+        targetCalories,
+        durationDays
+      });
+      alert('Челендж створено!');
+      document.getElementById('chTitle').value = '';
+    } catch (err) {
+      alert(err.message);
+    }
   },
 
   async loadAvgReport() {
-    const from = document.getElementById('repFrom').value;
-    const to = document.getElementById('repTo').value;
-    const data = await ApiClient.get(`/api/reports/average-activity?from=${from}&to=${to}`);
-    document.getElementById('avgResult').innerHTML =
-      `Середній час на користувача: <strong>${data.avgMinutesPerUser} хв</strong> | Середні витрати: <strong>${data.avgCaloriesPerUser} ккал</strong>`;
+    try {
+      const from = document.getElementById('repFrom').value;
+      const to = document.getElementById('repTo').value;
+      const data = await ApiClient.get(`/api/reports/average-activity?from=${from}&to=${to}`);
+      document.getElementById('avgResult').innerHTML =
+        `Середній час на користувача: <strong>${data.avgMinutesPerUser} хв</strong> | Середні витрати: <strong>${data.avgCaloriesPerUser} ккал</strong>`;
+    } catch (err) {
+      document.getElementById('avgResult').textContent = err.message;
+    }
   }
 };
 

@@ -23,3 +23,14 @@ body {
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
+.tour-callout {
+  background-color: #fff8e6;
+  border-left: 4px solid #f59e0b;
+  color: #78350f;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
