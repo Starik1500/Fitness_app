@@ -4,6 +4,7 @@ using FitnessApp.Domain.Interfaces;
 using FitnessApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,22 +12,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.AddSecurityDefinition("UserIdAuth", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "FitnessTracker API",
+        Version = "v1"
+    });
+
+    c.AddSecurityDefinition("UserId", new OpenApiSecurityScheme
     {
         Name = "X-User-Id",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Введіть GUID користувача (напр. 99999999-9999-9999-9999-999999999999 для Admin)"
+        Type = SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Description = "Ідентифікатор користувача (GUID)"
     });
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+
+    c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference { Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme, Id = "UserIdAuth" }
-            },
-            Array.Empty<string>()
-        }
+        [new OpenApiSecuritySchemeReference("UserId", document)] = []
     });
 });
 builder.Services.AddMemoryCache();
@@ -77,12 +79,11 @@ using (var scope = app.Services.CreateScope())
     {
         db.UserProfiles.Add(new FitnessApp.Domain.Entities.UserProfile
         {
-            Id = Guid.NewGuid(),
             UserId = admin.Id,
             Gender = FitnessApp.Domain.Enums.Gender.Male,
-            BirthDate = new DateTime(1995, 1, 1),
+            BirthDate = new DateOnly(1995, 1, 1),
             HeightCm = 180,
-            WeightKg = 80
+            CurrentWeightKg = 80
         });
         db.SaveChanges();
     }

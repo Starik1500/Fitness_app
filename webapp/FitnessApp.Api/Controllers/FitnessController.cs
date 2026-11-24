@@ -90,21 +90,14 @@ public class FitnessController : ControllerBase
                 u.Id,
                 u.Email,
                 u.Role,
-                Weight = u.Profile != null ? u.Profile.WeightKg : 0
+                Weight = u.Profile != null ? u.Profile.CurrentWeightKg : 0
             })
             .ToListAsync();
 
         return Ok(users);
     }
 
-    [HttpGet("exercises")]
-    public async Task<IActionResult> GetExercises()
-    {
-        var list = await _db.Exercises.ToListAsync();
-        return Ok(list);
-    }
-
-    [HttpGet("workouts")]
+    [HttpGet("workouts/history")]
     public async Task<IActionResult> GetWorkouts()
     {
         var list = await _db.WorkoutTemplates.ToListAsync();

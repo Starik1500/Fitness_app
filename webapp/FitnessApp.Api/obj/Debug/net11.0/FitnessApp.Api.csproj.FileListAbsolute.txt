@@ -97,5 +97,5 @@ C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\ne
 C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\qgl7tkdlw3-{0}-m39ykcpd9e-m39ykcpd9e.gz
 C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\nout05xfkd-{0}-dtmu2k36lx-dtmu2k36lx.gz
 C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\c9nc0tmkfn-{0}-lrcx73piv1-lrcx73piv1.gz
-C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\andp0vys3s-{0}-kxhiqfru58-kxhiqfru58.gz
 C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\8mc0m9uzk4-{0}-g80btygkaq-g80btygkaq.gz
+C:\Users\Vitaliy\Documents\GitHub\Fitness_app\webapp\FitnessApp.Api\obj\Debug\net11.0\compressed\andp0vys3s-{0}-uriitpsrle-uriitpsrle.gz
