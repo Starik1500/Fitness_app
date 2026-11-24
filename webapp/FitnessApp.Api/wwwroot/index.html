@@ -20,7 +20,6 @@
 </nav>
 
 <div class="container my-4">
-  <!-- Вітальний екран + Кнопка запуску інтерактивного демо-туру -->
   <div id="authSection" class="row g-4 align-items-stretch">
     <div class="col-lg-7">
       <div class="hero-banner p-4 p-md-5 h-100 d-flex flex-column justify-content-between">
@@ -66,7 +65,7 @@
         <div class="pt-3 border-top border-secondary d-flex flex-wrap align-items-center justify-content-between gap-2">
           <span class="small opacity-75">Хочеш спершу подивитися, як усе влаштовано всередині?</span>
           <button type="button" class="btn btn-warning fw-bold btn-sm px-3" onclick="App.startDemoTour()">
-            🧭 Запустити демо-тур (шаблонні дані)
+            Запустити демонстраціний режим
           </button>
         </div>
       </div>
@@ -87,7 +86,6 @@
           <div class="tab-pane fade show active" id="tabLogin">
             <h5 class="mb-3">Вхід у кабінет</h5>
             <form autocomplete="off" onsubmit="event.preventDefault(); App.login();">
-              <!-- Пастки для блокування автозаповнення браузером -->
               <input type="text" name="fake_user" style="display:none" tabindex="-1">
               <input type="password" name="fake_pass" style="display:none" tabindex="-1">
 
@@ -142,12 +140,10 @@
     </div>
   </div>
 
-  <!-- Особистий кабінет (реальний або в режимі інтерактивного туру) -->
   <div id="dashboardSection" class="d-none">
-    <!-- Плашка-заголовок інтерактивного туру -->
     <div id="demoModeBanner" class="alert alert-warning d-none d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4 shadow-sm">
       <div>
-        <strong>🧭 Режим інтерактивного туру (Демо-дані)</strong> — ви переглядаєте ізольований шаблонний профіль. Усі дії симулюються локально і не змінюють базу даних.
+        <strong>Демонстраційний режим</strong> — тут ви можете подивитися функціонал програми.
       </div>
       <button class="btn btn-dark btn-sm" onclick="App.logout()">Завершити тур / Створити профіль</button>
     </div>

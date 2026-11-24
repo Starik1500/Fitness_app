@@ -109,21 +109,68 @@ public class AdminController : ControllerBase
     }
 
     [HttpDelete("users/{id}")]
-    public async Task<IActionResult> DeleteUser(Guid id)
+public async Task<IActionResult> DeleteUser(Guid id)
+{
+    var user = await _db.Users.FindAsync(id);
+    if (user == null)
+        return NotFound("Користувача не знайдено.");
+
+    if (user.Email == "admin@fitness.local" || user.Id == Guid.Parse("99999999-9999-9999-9999-999999999999"))
+        return BadRequest("Неможливо видалити головного адміністратора.");
+
+    // 1. Очищаємо залежності програм тренувань користувача (наприклад, прив'язані WorkoutTemplates)
+    var programIds = await _db.UserPrograms
+        .Where(p => p.UserId == id)
+        .Select(p => p.Id)
+        .ToListAsync();
+
+    var programEntity = _db.Model.FindEntityType(typeof(FitnessApp.Domain.Entities.UserProgram));
+    if (programEntity != null && programIds.Count > 0)
     {
-        if (Guid.TryParse(Request.Headers["X-User-Id"], out var currentAdminId) && currentAdminId == id)
-            return BadRequest("Неможливо видалити власний активний акаунт адміністратора");
+        foreach (var fk in programEntity.GetReferencingForeignKeys())
+        {
+            var tableName = fk.DeclaringEntityType.GetTableName();
+            var colName = fk.Properties.First().GetColumnName();
+            if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(colName)) continue;
 
-        var user = await _db.Users.FindAsync(id);
-        if (user == null) return NotFound("Користувача не знайдено");
+            var sql = fk.IsRequired
+                ? string.Concat("DELETE FROM \"", tableName, "\" WHERE \"", colName, "\" = {0}")
+                : string.Concat("UPDATE \"", tableName, "\" SET \"", colName, "\" = NULL WHERE \"", colName, "\" = {0}");
 
-        if (user.Email.Equals("admin@fitness.local", StringComparison.OrdinalIgnoreCase))
-            return BadRequest("Системний обліковий запис адміністратора захищено від видалення");
-
-        _db.Users.Remove(user);
-        await _db.SaveChangesAsync();
-        return Ok();
+            foreach (var progId in programIds)
+                await _db.Database.ExecuteSqlRawAsync(sql, progId);
+        }
     }
+
+    // 2. Очищаємо всі таблиці, що посилаються на Users (профіль, вага, сесії, програми, челенджі, досягнення, нагадування)
+    var userEntity = _db.Model.FindEntityType(typeof(FitnessApp.Domain.Entities.User));
+    if (userEntity != null)
+    {
+        foreach (var fk in userEntity.GetReferencingForeignKeys())
+        {
+            var tableName = fk.DeclaringEntityType.GetTableName();
+            var colName = fk.Properties.First().GetColumnName();
+            if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(colName)) continue;
+
+            var sql = fk.IsRequired
+                ? string.Concat("DELETE FROM \"", tableName, "\" WHERE \"", colName, "\" = {0}")
+                : string.Concat("UPDATE \"", tableName, "\" SET \"", colName, "\" = NULL WHERE \"", colName, "\" = {0}");
+
+            await _db.Database.ExecuteSqlRawAsync(sql, id);
+        }
+    }
+
+    // 3. Видаляємо сам обліковий запис
+    _db.ChangeTracker.Clear();
+    var userToDelete = await _db.Users.FindAsync(id);
+    if (userToDelete != null)
+    {
+        _db.Users.Remove(userToDelete);
+        await _db.SaveChangesAsync();
+    }
+
+    return Ok(new { Message = "Користувача та всі його дані видалено." });
+}
 
     [HttpPut("users/{id}/demote")]
     public async Task<IActionResult> DemoteAdminToUser(Guid id)

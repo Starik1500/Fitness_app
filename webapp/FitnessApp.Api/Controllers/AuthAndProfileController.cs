@@ -2,6 +2,7 @@ using FitnessApp.Application.Patterns;
 using FitnessApp.Domain.Entities;
 using FitnessApp.Domain.Enums;
 using FitnessApp.Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,21 +18,37 @@ public record ReminderRequest(Guid UserId, string CronExpression, NotificationCh
 public class AuthAndProfileController : ControllerBase
 {
     private readonly AppDbContext _db;
+    private readonly IPasswordHasher<User> _passwordHasher;
     private readonly NotificationSenderFactory _notifFactory;
 
-    public AuthAndProfileController(AppDbContext db, NotificationSenderFactory notifFactory)
+    public AuthAndProfileController(
+        AppDbContext db,
+        IPasswordHasher<User> passwordHasher,
+        NotificationSenderFactory notifFactory)
     {
         _db = db;
+        _passwordHasher = passwordHasher;
         _notifFactory = notifFactory;
     }
 
     [HttpPost("auth/register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest req)
     {
+        if (req.HeightCm < 50 || req.HeightCm > 260)
+            return BadRequest("Зріст має бути в межах від 50 до 260 см.");
+        if (req.WeightKg < 20 || req.WeightKg > 400)
+            return BadRequest("Вага має бути в межах від 20 до 400 кг.");
+
         if (await _db.Users.AnyAsync(u => u.Email == req.Email))
             return BadRequest("Email вже зареєстрований");
 
-        var user = new User { Email = req.Email, PasswordHash = req.Password, Role = UserRole.User };
+        var user = new User
+        {
+            Email = req.Email,
+            Role = UserRole.User
+        };
+        user.PasswordHash = _passwordHasher.HashPassword(user, req.Password);
+
         var profile = new UserProfile
         {
             UserId = user.Id,
@@ -41,11 +58,6 @@ public class AuthAndProfileController : ControllerBase
             CurrentWeightKg = req.WeightKg
         };
         var initialWeight = new WeightLog { UserId = user.Id, WeightKg = req.WeightKg };
-
-        if (req.HeightCm < 50 || req.HeightCm > 260)
-            return BadRequest("Зріст має бути в межах від 50 до 260 см.");
-        if (req.WeightKg < 20 || req.WeightKg > 400)
-            return BadRequest("Вага має бути в межах від 20 до 400 кг.");
 
         _db.Users.Add(user);
         _db.UserProfiles.Add(profile);
@@ -59,9 +71,20 @@ public class AuthAndProfileController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginRequest req)
     {
         var user = await _db.Users.Include(u => u.Profile)
-            .FirstOrDefaultAsync(u => u.Email == req.Email && u.PasswordHash == req.Password);
+            .FirstOrDefaultAsync(u => u.Email == req.Email);
 
-        if (user == null) return Unauthorized("Невірний email або пароль");
+        if (user == null)
+            return Unauthorized("Невірний email або пароль.");
+
+        var verificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, req.Password);
+        if (verificationResult == PasswordVerificationResult.Failed)
+            return Unauthorized("Невірний email або пароль.");
+
+        if (verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
+        {
+            user.PasswordHash = _passwordHasher.HashPassword(user, req.Password);
+            await _db.SaveChangesAsync();
+        }
 
         return Ok(new
         {

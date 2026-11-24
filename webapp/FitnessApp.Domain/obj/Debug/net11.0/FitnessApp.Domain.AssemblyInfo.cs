@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FitnessApp.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e44b675e854ec7602d843766da8f619fdef2a40d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+427c24f8fe06ab7f8a48efe97c73c965ecf70a32")]
 [assembly: System.Reflection.AssemblyProductAttribute("FitnessApp.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FitnessApp.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
